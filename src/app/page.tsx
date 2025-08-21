@@ -10,6 +10,7 @@ export default function Home() {
   const categories: Record<string, number[]> = {
     "Dla par": [0, 1, 2],
     "Dla biznesu": [3, 4, 5, 6],
+    "Dla rodzin z dziećmi": [7, 8, 9],
     "Na specjalne okazje": [10, 11, 12, 13],
     "Polecane pakiety": [14, 15, 16, 17],
     "Na słodko": [18, 19],

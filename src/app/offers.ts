@@ -53,14 +53,14 @@ export const offers = [
     details:
       "Pakiet przygotowany z myślą o najmłodszych gościach i wygodzie rodziców. W pokoju znajdziecie łóżeczko, krzesełko do karmienia, świeże owoce i soki, a także kolorowanki, które umilą dzieciom czas. Rodzinny pobyt staje się wygodny i bezproblemowy.",
     price: 100,
-    img: "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+    img: "https://i.pinimg.com/736x/19/96/5f/19965f38562af4c82e2dc3a035cc019c.jpg",
   },
   {
     title: "Family Pack Plus",
     details:
       "Rozszerzona wersja pakietu, która zapewnia pełną wygodę i dodatkowe atrakcje dla dzieci. Obok krzesełka i łóżeczka czekają zabawki, przybory plastyczne, balony i bajkowe upominki. Wspólne chwile dopełniają słodkości z ulubionymi postaciami z bajek.",
     price: 100,
-    img: "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+    img: "https://previews.123rf.com/images/famveldman/famveldman1905/famveldman190500119/123775510-kids-paint-child-painting-in-white-sunny-study-room-little-girl-drawing-rainbow-school-kid-doing.jpg",
   },
   {
     title: "Disney Night",
