@@ -38,7 +38,7 @@ export default function RootLayout({
               Starter. Wszelkie prawa zastrzeżone.
             </p>
             <p>
-              &reg; Radisson – nazwa i logo są zastrzeżonymi znakami towarowymi
+              &reg; Radisson - nazwa i logo są zastrzeżonymi znakami towarowymi
               &reg; Radisson.
             </p>
 

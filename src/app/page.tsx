@@ -7,6 +7,17 @@ import { offers } from "./offers";
 export default function Home() {
   const allRef = useRef<HTMLDivElement>(null);
 
+  const categories: Record<string, number[]> = {
+    "Dla par": [0, 1, 2],
+    "Dla biznesu": [3, 4, 5, 6],
+    "Na specjalne okazje": [10, 11, 12, 13],
+    "Polecane pakiety": [14, 15, 16, 17],
+    "Na słodko": [18, 19],
+    "Atrakcje w okolicy hotelu": [20, 21, 22, 23],
+    "Dla kobiet": [24, 25, 26],
+    "Inne pakiety": [27, 28, 29],
+  };
+
   const Category = ({ name, ids }: { name: string; ids: number[] }) => {
     return (
       <div className="w-full py-5 max-w-svw">
@@ -91,15 +102,13 @@ export default function Home() {
         </div>
 
         <div ref={allRef} id="all">
-          <Category name="Dla Par" ids={[0, 1, 2]} />
-          <Category name="Dla Biznesu" ids={[3, 4, 5, 6]} />
-          <Category name="Dla Rodzin z Dziećmi" ids={[9]} />
-          <Category name="Na Specjalne Okazje" ids={[10, 11, 12, 13]} />
-          <Category name="Polecane Pakiety" ids={[14, 15, 16]} />
-          <Category name="Na Słodko" ids={[17, 18]} />
-          <Category name="Atrakcje w Okolicy Hotelu" ids={[19, 20, 21, 22]} />
-          <Category name="Dla Kobiet" ids={[25, 23, 24]} />
-          <Category name="Inne Pakiety" ids={[26, 27]} />
+          {Object.keys(categories).map((categoryName) => (
+            <Category
+              key={categoryName}
+              name={categoryName}
+              ids={categories[categoryName]}
+            />
+          ))}
         </div>
       </div>
     </div>
