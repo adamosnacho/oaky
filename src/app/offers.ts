@@ -63,11 +63,11 @@ export const offers = [
     img: "https://previews.123rf.com/images/famveldman/famveldman1905/famveldman190500119/123775510-kids-paint-child-painting-in-white-sunny-study-room-little-girl-drawing-rainbow-school-kid-doing.jpg",
   },
   {
-    title: "Disney Night",
+    title: "Kids dream",
     details:
-      "Piżama party w pokoju - zestaw bajek, kolorowe lampki i małe przekąski dla dzieci.",
+      "Ten magiczny pakiet dziecięcy oferuje słodkości od UMAM z podobiznami postaci z bajek, balony, kolorowanki z kredkami. Każdy element pakietu jest jak maleńki prezent, który otwiera drzwi do świata uśmiechów, kreatywności i niekończącej się zabawy.",
     price: 100,
-    img: "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+    img: "https://umam.pl/wp-content/uploads/2021/07/Projekt-bez-tytulu-11-500x500.jpg",
   },
   {
     title: "Secret Proposal",
