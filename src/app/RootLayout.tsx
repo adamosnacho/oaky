@@ -11,7 +11,7 @@ export default function rootLayout({
 }>) {
   const _ = useState();
 
-  if (window.location.pathname.includes("booking")) return <>{children}</>;
+  if (window !== undefined && window.location.pathname.includes("booking")) return <>{children}</>;
     return (
       <div className="flex flex-col items-center">
         <Navbar />
