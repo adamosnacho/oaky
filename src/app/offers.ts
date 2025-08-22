@@ -209,4 +209,18 @@ export const offers = [
     price: 100,
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAcqIZh51Z81FggciTiw8b6lH141MXfv-MiQ&s",
   },
+  {
+    title: "Zwiększony procent satysfakcji",
+    details:
+      "Ta oferta to luksusowy akcent, który sprawi że Twój pobyt stanie się jeszcze przyjemniejszy. Wybierz ulubiony napój- alkoholowy lub bezalkoholowy - i delektuj się nim w zaciszu swojego pokoju.",
+    price: 100,
+    img: "https://testosterone.pl/wiedza/wp-content/uploads/2018/11/alkholww.jpg",
+  },
+  {
+    title: "Bukiet kwiatów",
+    details:
+      "Ta oferta to subtelny akcent, który podkreśli wyjątkowość Twojego pobytu. Świeże kwiaty- zgodnie z Twoim wyborem- sprawia, że każdy moment w Radisson stanie się jeszcze bardziej magiczny.",
+    price: 100,
+    img: "https://pk1.pocztakwiatowa.pl/media/catalog/product/xc/image/3/2/32003-bukiet-mamy.jpg_4.jpg",
+  },
 ];
