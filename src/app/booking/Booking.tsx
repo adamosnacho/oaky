@@ -58,10 +58,10 @@ type NavType = "flights" | "taxi";
 const HOTELS_CONFIG: Hotel[] = [
   {
     id: 4,
-    name: "Radisson Blu Hotel Gdańsk",
-    location: "ul. Długi Targ 19, 80-828 Gdańsk, Polska",
+    name: "Radisson Hotel & Apartments Gdańsk",
+    location: "ul Chmielna 10, 80-748 Gdańsk, Polska",
     image:
-      "https://cf.bstatic.com/xdata/images/hotel/max1024x768/524484964.jpg?k=9e761593b8e2993f46c40c91b7def8bd225de005082788b615487a0dbef61311&o=",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKdhM221dlV1xtM5aClRP7Z08RA05QP_YwEg&s",
     rating: 9.5,
     reviews: 6250,
     price: 690,
