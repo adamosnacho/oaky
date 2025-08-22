@@ -944,7 +944,7 @@ const BookingClonePL: React.FC = () => {
           ></div>
           <div className="bg-white rounded-lg p-8 z-60 max-w-md mx-4 text-center">
             <h3 className="text-xl font-bold mb-4 text-red-600">
-              Serio Radisson Blu jest lepszy
+              Serio Radisson Hotel & Apartments jest lepszy
             </h3>
             <p className="mb-6 text-gray-600">
               Ten hotel nie jest dostępny do rezerwacji. Radisson Blu Hotel
