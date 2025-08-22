@@ -23,7 +23,7 @@ export const offers = [
   {
     title: "Work Smart",
     details:
-      "Idealny wybór dla osób łączących pobyt w hotelu z obowiązkami zawodowymi. Szybkie wifi premium, druk dokumentów i nielimitowana kawa zapewnią komfortową przestrzeń do pracy.",
+      "Idealny wybór dla osób łączących pobyt w hotelu z obowiązkami zawodowymi\n\nSzybkie **Wi-Fi premium**, możliwość **drukowania dokumentów** oraz **nielimitowana kawa** zapewnią komfortową przestrzeń do pracy.\n\n**Zawiera:**\n* Fast check-in\n* Late checkout",
     price: 100,
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJoEcg67oHvaxgRr-h3B_3VOu4fzU60hGJyg&s",
   },
@@ -67,14 +67,14 @@ export const offers = [
     details:
       "Ten magiczny pakiet dziecięcy oferuje słodkości od UMAM z podobiznami postaci z bajek, balony, kolorowanki z kredkami. Każdy element pakietu jest jak maleńki prezent, który otwiera drzwi do świata uśmiechów, kreatywności i niekończącej się zabawy.",
     price: 100,
-    img: "https://umam.pl/wp-content/uploads/2021/07/Projekt-bez-tytulu-11-500x500.jpg",
+    img: "/kidsdream.jpeg",
   },
   {
     title: "Secret Proposal",
     details:
       "Zadbamy o każdy detal, aby zaręczyny były niezapomniane. Zjawiskowa dekoracja pokoju, tort, kwiaty i dyskretna pomoc recepcji stworzą idealną oprawę do celebracji tej wyjątkowej chwili.",
     price: 100,
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB7n3xaTvLXKK6lnh8cN1z4YUTY0AWKnMd0Q&s",
+    img: "/flowers.jpeg",
   },
   {
     title: "Birthday surprise",

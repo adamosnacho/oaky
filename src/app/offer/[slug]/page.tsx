@@ -4,6 +4,8 @@ import { offers } from "@/app/offers";
 import { Check, Square } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function Offer() {
   const params = useParams();
@@ -42,9 +44,19 @@ export default function Offer() {
 
             <h1 className="font-bold text-3xl">Więcej Informacji</h1>
 
-            <p className="pey-5 text-gray-800 leading-relaxed">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                ul: ({ node, ...props }) => (
+                  <ul className="list-disc list-inside space-y-2" {...props} />
+                ),
+                li: ({ node, ...props }) => (
+                  <li className="text-gray-700" {...props} />
+                ),
+              }}
+            >
               {offers[id].details}
-            </p>
+            </ReactMarkdown>
 
             <img src={offers[id].img} alt="" className="w-full" />
           </div>

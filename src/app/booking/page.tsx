@@ -1,18 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BookingClonePL from "./Booking";
 
 export default function Page() {
+  // Hook for fade-in on scroll
+  const useFadeInOnScroll = () => {
+    const ref = useRef<HTMLDivElement>(null);
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            observer.disconnect(); // optional: stop observing once visible
+          }
+        },
+        { threshold: 1 }
+      );
+
+      if (ref.current) observer.observe(ref.current);
+
+      return () => observer.disconnect();
+    }, []);
+
+    return { ref, visible };
+  };
+
+  const FadeInSection: React.FC<{ children: React.ReactNode }> = ({
+    children,
+  }) => {
+    const { ref, visible } = useFadeInOnScroll();
+    return (
+      <div
+        ref={ref}
+        className={`transition-opacity duration-700 ease-out ${
+          visible ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {children}
+      </div>
+    );
+  };
+
   const Filip = () => {
-    const states: {
-      expression: string;
-      ony: number;
-      x: number;
-      y: number;
-      xFromLeft: boolean;
-      fromCentre?: boolean;
-    }[] = [
+    const states = [
       { expression: "f1", ony: 0, x: 30, y: 40, xFromLeft: false },
       { expression: "f2", ony: 300, x: -20, y: 70, xFromLeft: false },
       { expression: "f3", ony: 350, x: -20, y: 70, xFromLeft: false },
@@ -27,6 +60,7 @@ export default function Page() {
     const [windowWidth, setWindowWidth] = useState(
       typeof window !== "undefined" ? window.innerWidth : 0
     );
+    const [position, setPosition] = useState({ x: 0, y: 0, expression: "f1" });
 
     useEffect(() => {
       const handleScroll = () => setScrollY(window.scrollY);
@@ -41,56 +75,65 @@ export default function Page() {
       };
     }, []);
 
-    let current = states[0];
-    let next = states[states.length - 1];
-    for (let i = 0; i < states.length - 1; i++) {
-      if (scrollY >= states[i].ony && scrollY <= states[i + 1].ony) {
-        current = states[i];
-        next = states[i + 1];
-        break;
-      }
-    }
+    useEffect(() => {
+      const imageWidth = 100;
 
-    const t = (scrollY - current.ony) / Math.max(1, next.ony - current.ony);
-    const imageWidth = 100;
+      const toAbsoluteX = (state: (typeof states)[0]) => {
+        if (false) {
+          const centre = windowWidth / 2 - imageWidth / 2;
+          return state.xFromLeft ? centre - state.x : centre + state.x;
+        } else {
+          return state.xFromLeft ? state.x : windowWidth - state.x - imageWidth;
+        }
+      };
 
-    const toAbsoluteX = (state: (typeof states)[0]) => {
-      if (state.fromCentre) {
-        const centre = windowWidth / 2 - imageWidth / 2;
-        return state.xFromLeft ? centre - state.x : centre + state.x;
-      } else {
-        return state.xFromLeft ? state.x : windowWidth - state.x - imageWidth;
-      }
-    };
+      const animate = () => {
+        let current = states[0];
+        let next = states[states.length - 1];
 
-    const absCurrentX = toAbsoluteX(current);
-    const absNextX = toAbsoluteX(next);
+        for (let i = 0; i < states.length - 1; i++) {
+          if (scrollY >= states[i].ony && scrollY <= states[i + 1].ony) {
+            current = states[i];
+            next = states[i + 1];
+            break;
+          }
+        }
 
-    const x = absCurrentX + (absNextX - absCurrentX) * t;
-    const y = scrollY < next.ony ? current.y : next.y;
+        const absCurrentX = toAbsoluteX(current);
+        const absNextX = toAbsoluteX(next);
 
-    const expression =
-      t < 0.5 ? `/${current.expression}.png` : `/${next.expression}.png`;
+        const factor =
+          next.ony === current.ony
+            ? 0
+            : (scrollY - current.ony) / (next.ony - current.ony);
+
+        const targetX = absCurrentX + (absNextX - absCurrentX) * factor;
+        const targetY = current.y + (next.y - current.y) * factor;
+
+        // Smooth movement toward target
+        setPosition((prev) => ({
+          x: prev.x + (targetX - prev.x) * 0.3,
+          y: prev.y + (targetY - prev.y) * 0.3,
+          expression: current.expression,
+        }));
+
+        requestAnimationFrame(animate);
+      };
+
+      animate();
+    }, [scrollY, windowWidth]);
 
     return (
-      <div>
+      <>
         <img
-          src={expression}
-          width={imageWidth}
-          className="absolute z-50 transition-transform duration-500 ease-in-out transform-gpu"
+          src={`/${position.expression}.png`}
+          width={100}
+          className="absolute z-50 transform-gpu"
           style={{
-            transform: `translate(${x}px, ${y + scrollY}px)`,
+            transform: `translate(${position.x}px, ${position.y + scrollY}px)`,
           }}
         />
-        <p
-          className="absolute z-50 text-gray-700 font-bold transition-transform duration-500 ease-in-out"
-          style={{
-            transform: `translate(${x}px, ${y + scrollY}px)`,
-          }}
-        >
-          {Math.round(scrollY)}
-        </p>
-      </div>
+      </>
     );
   };
 
@@ -109,55 +152,68 @@ export default function Page() {
       <div className="p-5 overflow-x-clip max-w-dvw relative">
         <Filip />
 
-        <p className="font-bold text-2xl pt-20 pb-15 mx-5">
-          Cześć! Nazywam się <strong className="text-cyan-600">Felippe</strong>
-        </p>
-
-        <p className="font-bold text-2xl py-15 px-5 bg-gray-100 rounded-lg shadow-sm">
-          Współpracuję z{" "}
-          <strong className="text-cyan-600">zespołem Forward</strong>
-        </p>
-
-        <div className="flex flex-col md:flex-row justify-between items-center py-15 px-5 gap-5">
-          <img
-            src="/rlogo.png"
-            alt="Logo Radisson"
-            className="w-[30%] object-contain"
-          />
-          <p className="font-bold text-lg">
-            Naszym celem jest pomóc{" "}
-            <strong className="text-cyan-600">Radisson</strong> przyciągnąć
-            więcej klientów i zachęcić ich do wykupienia dodatkowych pakietów.
+        <FadeInSection>
+          <p className="font-bold text-2xl pt-20 pb-15 mx-5">
+            Cześć! Nazywam się{" "}
+            <strong className="text-cyan-600">Felippe</strong>
           </p>
-        </div>
+        </FadeInSection>
 
-        <div className="py-15 px-5 max-w-[50vw] mx-5 bg-gray-100 rounded-lg shadow-sm">
-          <p className="font-bold text-lg">Nasza obecna sytuacja</p>
-          <p className="pt-3">
-            - Jesteśmy <strong className="text-cyan-600">ograniczeni</strong>{" "}
-            przez sieć Radisson, ponieważ nie możemy modyfikować{" "}
-            <strong className="text-cyan-600">
-              strony internetowej, Instagrama ani innych platform online.
-            </strong>
+        <FadeInSection>
+          <p className="font-bold text-2xl py-15 px-5 bg-gray-100 rounded-lg shadow-sm">
+            Współpracuję z{" "}
+            <strong className="text-cyan-600">zespołem Forward</strong>
           </p>
-          <p className="pt-1">
-            - Musimy znaleźć{" "}
-            <strong className="text-cyan-600">kreatywne pomysły</strong> na nowe
-            pakiety, które zwiększą zainteresowanie dodatkowymi usługami.
-          </p>
-        </div>
+        </FadeInSection>
 
-        <div className="flex justify-end">
-          <p className="font-bold text-lg py-15 px-5 max-w-[60vw] text-end">
-            Przygotowaliśmy przykładowe doświadczenie, aby pokazać, jak <br />
-            <strong className="text-cyan-600">gość widzi te oferty.</strong>
-          </p>
-        </div>
+        <FadeInSection>
+          <div className="flex flex-col md:flex-row justify-between items-center py-15 px-5 gap-5">
+            <img
+              src="/rlogo.png"
+              alt="Logo Radisson"
+              className="w-[30%] object-contain"
+            />
+            <p className="font-bold text-lg">
+              Naszym celem jest pomóc{" "}
+              <strong className="text-cyan-600">Radisson</strong> przyciągnąć
+              więcej klientów i zachęcić ich do wykupienia dodatkowych pakietów.
+            </p>
+          </div>
+        </FadeInSection>
 
-        <p className="font-bold text-3xl py-15 px-5 text-center">
-          Spróbuj zrobić <strong className="text-cyan-600">fikcyjną</strong>{" "}
-          rezerwację
-        </p>
+        <FadeInSection>
+          <div className="py-15 px-5 max-w-[50vw] mx-5 bg-gray-100 rounded-lg shadow-sm">
+            <p className="font-bold text-lg">Nasza obecna sytuacja</p>
+            <p className="pt-3">
+              - Jesteśmy <strong className="text-cyan-600">ograniczeni</strong>{" "}
+              przez sieć Radisson, ponieważ nie możemy modyfikować{" "}
+              <strong className="text-cyan-600">
+                strony internetowej, Instagrama ani innych platform online.
+              </strong>
+            </p>
+            <p className="pt-1">
+              - Musimy znaleźć{" "}
+              <strong className="text-cyan-600">kreatywne pomysły</strong> na
+              nowe pakiety, które zwiększą zainteresowanie dodatkowymi usługami.
+            </p>
+          </div>
+        </FadeInSection>
+
+        <FadeInSection>
+          <div className="flex justify-end">
+            <p className="font-bold text-lg py-15 px-5 max-w-[60vw] text-end">
+              Przygotowaliśmy przykładowe doświadczenie, aby pokazać, jak <br />
+              <strong className="text-cyan-600">gość widzi te oferty.</strong>
+            </p>
+          </div>
+        </FadeInSection>
+
+        <FadeInSection>
+          <p className="font-bold text-3xl py-15 px-5 text-center">
+            Spróbuj zrobić <strong className="text-cyan-600">fikcyjną</strong>{" "}
+            rezerwację
+          </p>
+        </FadeInSection>
       </div>
 
       <BookingClonePL />

@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { offers } from "./offers";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function Home() {
   const allRef = useRef<HTMLDivElement>(null);
@@ -50,9 +52,24 @@ export default function Home() {
               <div className="p-6 h-[280px] flex flex-col justify-between">
                 <div>
                   <h4 className="font-bold text-lg">{offers[id].title}</h4>
-                  <p className="text-sm overflow-y-ellipsis overflow-y-clip h-25">
-                    {offers[id].details}
-                  </p>
+                  <div className="text-sm overflow-y-ellipsis overflow-y-clip h-25">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        ul: ({ node, ...props }) => (
+                          <ul
+                            className="list-disc list-inside space-y-2"
+                            {...props}
+                          />
+                        ),
+                        li: ({ node, ...props }) => (
+                          <li className="text-gray-700" {...props} />
+                        ),
+                      }}
+                    >
+                      {offers[id].details}
+                    </ReactMarkdown>
+                  </div>
                 </div>
                 <div className="flex justify-between w-full gap-3">
                   <div>

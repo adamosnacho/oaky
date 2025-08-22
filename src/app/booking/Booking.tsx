@@ -1,5 +1,5 @@
 "use client";
-import React, { JSX, useState } from "react";
+import React, { JSX, useState, useCallback } from "react";
 import {
   MapPin,
   Calendar,
@@ -138,6 +138,161 @@ const HOTELS_CONFIG: Hotel[] = [
   },
 ];
 
+interface ReservationScreenProps {
+  selectedHotel: Hotel | null;
+  bookingData: BookingData;
+  handleBookingInputChange: (field: keyof BookingData, value: string) => void;
+  proceedToPayment: () => void;
+  goBackToHome: () => void;
+  searchData: any;
+}
+
+const ReservationScreen = ({
+  selectedHotel,
+  bookingData,
+  handleBookingInputChange,
+  proceedToPayment,
+  goBackToHome,
+  searchData
+}: ReservationScreenProps) => {
+  return <div className="min-h-screen bg-gray-50">
+    {/* Header */}
+    <header className="bg-blue-700 text-white px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={goBackToHome}
+            className="text-white hover:text-gray-200"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <div className="text-2xl font-bold">Booking.com</div>
+        </div>
+      </div>
+    </header>
+
+    <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        {/* Hotel Info Header */}
+        <div className="p-6 bg-gray-50 border-b">
+          <div className="flex items-start space-x-4">
+            <img
+              src={selectedHotel?.image}
+              alt={selectedHotel?.name}
+              className="w-24 h-24 object-cover rounded-lg"
+            />
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                {selectedHotel?.name}
+              </h1>
+              <p className="text-gray-600 flex items-center mb-2">
+                <MapPin className="w-4 h-4 mr-1" />
+                {selectedHotel?.location}
+              </p>
+              <div className="flex items-center">
+                <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                <span className="ml-1 text-sm font-medium">
+                  {selectedHotel?.rating}
+                </span>
+                <span className="ml-2 text-sm text-gray-500">
+                  ({selectedHotel?.reviews} opinii)
+                </span>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-3xl font-bold text-blue-600">
+                ${selectedHotel?.price}
+              </div>
+              <div className="text-gray-500">/noc</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Booking Form - Simplified */}
+        <div className="p-6">
+          <h2 className="text-xl font-semibold mb-6">Dane gościa</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Imię *
+              </label>
+              <div className="relative">
+                <User className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={bookingData.firstName}
+                  onChange={(e) =>
+                    handleBookingInputChange("firstName", e.target.value)
+                  }
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Wprowadź imię"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nazwisko *
+              </label>
+              <div className="relative">
+                <User className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={bookingData.lastName}
+                  onChange={(e) =>
+                    handleBookingInputChange("lastName", e.target.value)
+                  }
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Wprowadź nazwisko"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Booking Summary */}
+          <div className="bg-gray-50 rounded-lg p-4 mb-6">
+            <h3 className="font-semibold mb-3">Podsumowanie rezerwacji</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span>Hotel:</span>
+                <span>{selectedHotel?.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Goście:</span>
+                <span>{searchData.guests}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Cena za noc:</span>
+                <span>${selectedHotel?.price}</span>
+              </div>
+              <div className="flex justify-between font-semibold pt-2 border-t">
+                <span>Łącznie:</span>
+                <span>${selectedHotel?.price}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={goBackToHome}
+              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+            >
+              Anuluj
+            </button>
+            <button
+              onClick={proceedToPayment}
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
+            >
+              Przejdź do płatności
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>;
+};
+
 const BookingClonePL: React.FC = () => {
   const [searchData, setSearchData] = useState<SearchData>({
     destination: "",
@@ -163,7 +318,7 @@ const BookingClonePL: React.FC = () => {
   });
   const [isProcessingPayment, setIsProcessingPayment] =
     useState<boolean>(false);
-    const [isNotifing, setIsNotifing] = useState<boolean>(false);
+  const [isNotifing, setIsNotifing] = useState<boolean>(false);
 
   const amenityIcons: { [key: string]: JSX.Element } = {
     wifi: <Wifi className="w-4 h-4" />,
@@ -172,7 +327,8 @@ const BookingClonePL: React.FC = () => {
     gym: <Dumbbell className="w-4 h-4" />,
   };
 
-  const handleSearch = (): void => {
+  // Memoized handlers to prevent unnecessary re-renders
+  const handleSearch = useCallback((): void => {
     if (searchData.destination) {
       const filtered = HOTELS_CONFIG.filter(
         (hotel) =>
@@ -187,48 +343,51 @@ const BookingClonePL: React.FC = () => {
     } else {
       setFilteredHotels(HOTELS_CONFIG);
     }
-  };
+  }, [searchData.destination]);
 
-  const handleInputChange = (field: keyof SearchData, value: string): void => {
-    setSearchData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  const handleInputChange = useCallback(
+    (field: keyof SearchData, value: string): void => {
+      setSearchData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    },
+    []
+  );
 
-  const openNav = (type: NavType): void => {
+  const openNav = useCallback((type: NavType): void => {
     setShowMessage(true);
-  };
+  }, []);
 
-  const handleBookNow = (hotel: Hotel): void => {
+  const handleBookNow = useCallback((hotel: Hotel): void => {
     if (!hotel.bookable) {
       setShowRadissonMessage(true);
       return;
     }
     setSelectedHotel(hotel);
     setCurrentView("reservation");
-  };
+  }, []);
 
-  const handleBookingInputChange = (
-    field: keyof BookingData,
-    value: string
-  ): void => {
-    setBookingData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  const handleBookingInputChange = useCallback(
+    (field: keyof BookingData, value: string): void => {
+      setBookingData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
+    },
+    []
+  );
 
-  const proceedToPayment = (): void => {
+  const proceedToPayment = useCallback((): void => {
     // Basic validation - only name and surname required
     if (!bookingData.firstName || !bookingData.lastName) {
       alert("Proszę wypełnić imię i nazwisko");
       return;
     }
     setCurrentView("payment");
-  };
+  }, [bookingData.firstName, bookingData.lastName]);
 
-  const processPayment = async (): Promise<void> => {
+  const processPayment = useCallback(async (): Promise<void> => {
     // No validation needed since card details are pre-filled
     setIsProcessingPayment(true);
 
@@ -250,166 +409,46 @@ const BookingClonePL: React.FC = () => {
       });
       alert("Rezerwacja została pomyślnie złożona!");
     }, 2000);
-  };
+  }, []);
 
-  const goBackToHome = (): void => {
+  const goBackToHome = useCallback((): void => {
     setCurrentView("home");
     setSelectedHotel(null);
-  };
+  }, []);
 
-  const goBackToReservation = (): void => {
+  const goBackToReservation = useCallback((): void => {
     setCurrentView("reservation");
-  };
+  }, []);
 
+  const closeMessage = useCallback(() => {
+    setShowMessage(false);
+  }, []);
+
+  const closeRadissonMessage = useCallback(() => {
+    setShowRadissonMessage(false);
+  }, []);
+
+  // Notification component
   const Notification = () => {
-    if (!isNotifing) return <div></div>;
-    return <div className="w-vws fixed left-0 top-0 bg-white rounded-md border-1 border-gray-100 z-100 p-2 m-3">
-      <p className="text-gray-800 flex items-center gap-2">Dziękujemy za złożenie rezerwacji w Radisson Gdańsk! Mamy kilka ofert które mogły by Cię zainteresować<a href="/" className="text-cyan-600 hover:underline flex items-center"><MousePointerClick /> Zobacz Teraz!</a></p>
-    </div>
-  }
-
-  // Reservation Screen Component
-  const ReservationScreen: React.FC = () => (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-blue-700 text-white px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={goBackToHome}
-              className="text-white hover:text-gray-200"
-            >
-              <ArrowLeft className="w-6 h-6" />
-            </button>
-            <div className="text-2xl font-bold">Booking.com</div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-4xl mx-auto px-6 py-8">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* Hotel Info Header */}
-          <div className="p-6 bg-gray-50 border-b">
-            <div className="flex items-start space-x-4">
-              <img
-                src={selectedHotel?.image}
-                alt={selectedHotel?.name}
-                className="w-24 h-24 object-cover rounded-lg"
-              />
-              <div className="flex-1">
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                  {selectedHotel?.name}
-                </h1>
-                <p className="text-gray-600 flex items-center mb-2">
-                  <MapPin className="w-4 h-4 mr-1" />
-                  {selectedHotel?.location}
-                </p>
-                <div className="flex items-center">
-                  <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                  <span className="ml-1 text-sm font-medium">
-                    {selectedHotel?.rating}
-                  </span>
-                  <span className="ml-2 text-sm text-gray-500">
-                    ({selectedHotel?.reviews} opinii)
-                  </span>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold text-blue-600">
-                  ${selectedHotel?.price}
-                </div>
-                <div className="text-gray-500">/noc</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Booking Form - Simplified */}
-          <div className="p-6">
-            <h2 className="text-xl font-semibold mb-6">Dane gościa</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Imię *
-                </label>
-                <div className="relative">
-                  <User className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                  <input
-                    type="text"
-                    value={bookingData.firstName}
-                    onChange={(e) =>
-                      handleBookingInputChange("firstName", e.target.value)
-                    }
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Wprowadź imię"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nazwisko *
-                </label>
-                <div className="relative">
-                  <User className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                  <input
-                    type="text"
-                    value={bookingData.lastName}
-                    onChange={(e) =>
-                      handleBookingInputChange("lastName", e.target.value)
-                    }
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Wprowadź nazwisko"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Booking Summary */}
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <h3 className="font-semibold mb-3">Podsumowanie rezerwacji</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>Hotel:</span>
-                  <span>{selectedHotel?.name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Goście:</span>
-                  <span>{searchData.guests}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Cena za noc:</span>
-                  <span>${selectedHotel?.price}</span>
-                </div>
-                <div className="flex justify-between font-semibold pt-2 border-t">
-                  <span>Łącznie:</span>
-                  <span>${selectedHotel?.price}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={goBackToHome}
-                className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
-              >
-                Anuluj
-              </button>
-              <button
-                onClick={proceedToPayment}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
-              >
-                Przejdź do płatności
-              </button>
-            </div>
-          </div>
-        </div>
+    if (!isNotifing) return null;
+    return (
+      <div className="w-vws fixed left-0 top-0 bg-white rounded-md border-1 border-gray-100 z-100 p-2 m-3">
+        <p className="text-gray-800 flex items-center gap-2">
+          Dziękujemy za złożenie rezerwacji w Radisson Gdańsk! Mamy kilka ofert
+          które mogły by Cię zainteresować
+          <a
+            href="/"
+            className="text-cyan-600 hover:underline flex items-center"
+          >
+            <MousePointerClick /> Zobacz Teraz!
+          </a>
+        </p>
       </div>
-    </div>
-  );
+    );
+  };
 
   // Payment Screen Component
-  const PaymentScreen: React.FC = () => (
+  const PaymentScreen = () => (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-blue-700 text-white px-6 py-4">
@@ -532,10 +571,10 @@ const BookingClonePL: React.FC = () => {
     </div>
   );
 
-  // Main Home Screen (existing code)
-  const HomeScreen: React.FC = () => (
+  // Main Home Screen
+  const HomeScreen = () => (
     <div className="min-h-screen bg-gray-50">
-      <Notification></Notification>
+      <Notification />
       {/* Header */}
       <header className="bg-blue-700 text-white px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -570,7 +609,7 @@ const BookingClonePL: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Section (translated to Polish) */}
+      {/* Hero Section */}
       <section className="bg-blue-700 text-white pb-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-8 text-center md:text-left">
@@ -627,7 +666,7 @@ const BookingClonePL: React.FC = () => {
         </div>
       </section>
 
-      {/* Offers, Hotels and Footer kept but translated lightly to maintain layout */}
+      {/* Offers section */}
       <section className="max-w-7xl mx-auto px-6 py-12">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Oferty</h2>
@@ -683,6 +722,7 @@ const BookingClonePL: React.FC = () => {
         </div>
       </section>
 
+      {/* Hotels section */}
       <section className="max-w-7xl mx-auto px-6 py-8">
         <h2 className="text-3xl font-bold text-gray-900 mb-8">
           Polecane hotele
@@ -774,7 +814,7 @@ const BookingClonePL: React.FC = () => {
         )}
       </section>
 
-      {/* Footer translated to Polish */}
+      {/* Footer */}
       <footer className="bg-gray-900 text-white mt-16">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -868,9 +908,9 @@ const BookingClonePL: React.FC = () => {
 
   // Render the appropriate screen based on current view
   return (
-    <>
+    <>``
       {currentView === "home" && <HomeScreen />}
-      {currentView === "reservation" && <ReservationScreen />}
+      {currentView === "reservation" && <ReservationScreen selectedHotel={selectedHotel} bookingData={bookingData} handleBookingInputChange={handleBookingInputChange} proceedToPayment={proceedToPayment} goBackToHome={goBackToHome} searchData={searchData} />}
       {currentView === "payment" && <PaymentScreen />}
 
       {/* Modal with the required Polish message when Flights or Taxi opened */}
@@ -878,7 +918,7 @@ const BookingClonePL: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
             className="absolute inset-0 bg-black opacity-50"
-            onClick={() => setShowMessage(false)}
+            onClick={closeMessage}
           ></div>
           <div className="bg-white rounded-lg p-8 z-60 max-w-md mx-4 text-center">
             <h3 className="text-xl font-bold mb-4">
@@ -886,7 +926,7 @@ const BookingClonePL: React.FC = () => {
             </h3>
             <p className="mb-6">Wracaj do Gdańska!</p>
             <button
-              onClick={() => setShowMessage(false)}
+              onClick={closeMessage}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
             >
               OK?
@@ -900,7 +940,7 @@ const BookingClonePL: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
             className="absolute inset-0 bg-black opacity-50"
-            onClick={() => setShowRadissonMessage(false)}
+            onClick={closeRadissonMessage}
           ></div>
           <div className="bg-white rounded-lg p-8 z-60 max-w-md mx-4 text-center">
             <h3 className="text-xl font-bold mb-4 text-red-600">
@@ -911,7 +951,7 @@ const BookingClonePL: React.FC = () => {
               Gdańsk oferuje najlepszą jakość!
             </p>
             <button
-              onClick={() => setShowRadissonMessage(false)}
+              onClick={closeRadissonMessage}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
             >
               OK, rozumiem
